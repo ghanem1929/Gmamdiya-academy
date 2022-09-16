@@ -33,6 +33,9 @@ router.post(
   body("FirstName", "First name is required").notEmpty(),
   body("LastName", "Last name is required").notEmpty(),
   body("BirthDate", "birthDate is required").notEmpty(),
+  body("Adress", "Adress is required").notEmpty(),
+  body("Phone", "Phone is required").notEmpty() /* 
+  body("Phone", "Phone is required").isNumeric(), */,
   body("BirthDate", "birthDate not valid").isISO8601("dd/mm/yyyy"),
   body("Group", "group is required").notEmpty(),
   async (req, res) => {
@@ -41,7 +44,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { FirstName, LastName, BirthDate, Group } = req.body;
+    const { FirstName, LastName, BirthDate, Phone, Address, Group } = req.body;
 
     try {
       const newPlayer = new Player({
@@ -49,6 +52,8 @@ router.post(
         LastName,
         BirthDate,
         Group,
+        Phone,
+        Address,
         user: req.user.id,
       });
 
@@ -67,7 +72,7 @@ router.post(
  * @ccess Private
  */
 router.put("/:id", auth, async (req, res) => {
-  const { firstName, lastName, birthDate, group } = req.body;
+  const { FirstName, LastName, BirthDate, Group, Address, Phone } = req.body;
 
   try {
     /* 
@@ -76,13 +81,15 @@ router.put("/:id", auth, async (req, res) => {
     if (!player) return res.status(404).json({ msg: "player not found" });
 
     // Make sure user owns player
-    if (player.user !== req.body.user)
+    if (player.user.toString() !== req.user.id)
       return res.status(401).json({ msg: "Not authorised" });
 
-    if (firstName) player.firstName = firstName;
-    if (lastName) player.lastName = lastName;
-    if (birthDate) player.birthDate = birthDate;
-    if (group) player.group = group;
+    if (FirstName) player.FirstName = FirstName;
+    if (LastName) player.LastName = LastName;
+    if (BirthDate) player.BirthDate = BirthDate;
+    if (Address) player.Address = Address;
+    if (Phone) player.Phone = Phone;
+    if (Group) player.Group = Group;
 
     contact = await player.save();
     res.json(player);
@@ -103,7 +110,7 @@ router.delete("/:id", auth, async (req, res) => {
     if (!player) return res.status(404).json({ msg: "Player not found" });
 
     // Make sure user owns player
-    if (player.user !== req.body.user)
+    if (player.user.toString() !== req.user.id)
       return res.status(401).json({ msg: "Not authorised" });
 
     await Player.deleteOne({ _id: req.params.id });

@@ -14,6 +14,14 @@ const playerSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    Address: {
+      type: String,
+      required: true,
+    },
+    Phone: {
+      type: Number,
+      required: true,
+    },
     Group: {
       type: String,
       required: true,

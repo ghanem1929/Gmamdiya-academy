@@ -7,17 +7,53 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-
-const data = [
-  { name: "January", Total: 1200 },
-  { name: "February", Total: 2100 },
-  { name: "March", Total: 800 },
-  { name: "April", Total: 1600 },
-  { name: "May", Total: 900 },
-  { name: "June", Total: 1700 },
-];
+import { useDispatch, useSelector } from "react-redux";
 
 const Chart = ({ aspect, title }) => {
+  const { players, loading } = useSelector((state) => state.playerReducer);
+  const dispatch = useDispatch();
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const data = [
+    {
+      name: monthNames[new Date().getMonth() - 2],
+      Total: players.filter(
+        (item) =>
+          monthNames[new Date().getMonth() - 2] ===
+          monthNames[new Date(item.createdAt).getMonth()]
+      ).length,
+    },
+    {
+      name: monthNames[new Date().getMonth() - 1],
+      Total: players.filter(
+        (item) =>
+          monthNames[new Date().getMonth() - 1] ===
+          monthNames[new Date(item.createdAt).getMonth()]
+      ).length,
+    },
+    {
+      name: monthNames[new Date().getMonth()],
+      Total: players.filter(
+        (item) =>
+          monthNames[new Date(item.createdAt).getMonth()] ===
+          monthNames[new Date().getMonth()]
+      ).length,
+    },
+  ];
+
   return (
     <div className="chart">
       <div className="title">{title}</div>

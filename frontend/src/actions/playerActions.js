@@ -1,4 +1,3 @@
-import { v4 } from "uuid";
 import axios from "axios";
 import {
   ADD_PLAYER,
@@ -30,7 +29,6 @@ export const getPlayers = () => async (dispatch) => {
 
 // Add player
 export const addPlayer = (player) => async (dispatch) => {
-  // player.id = v4();
   if (localStorage.token) {
     var config = {
       headers: {
@@ -66,10 +64,10 @@ export const deletePlayer = (id) => async (dispatch) => {
   }
 };
 
-// Set Current Contact
-export const setCurrent = (contact) => ({
+// Set Current Player
+export const setCurrent = (player) => ({
   type: SET_CURRENT,
-  payload: contact,
+  payload: player,
 });
 
 // Clear Current Player

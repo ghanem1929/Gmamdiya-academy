@@ -6,16 +6,22 @@ import {
   getPlayers,
   deletePlayer,
   clearCurrent,
+  setCurrent,
 } from "../../actions/playerActions";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MUIDataTable from "mui-datatables";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const List = () => {
   const { players, loading } = useSelector((state) => state.playerReducer);
-
-  const [data, setData] = useState(players);
+  const navigate = useNavigate();
+  /*   const [data, setData] = useState(players);
+   */ const data = players.filter((item) =>
+    item.BirthDate.length > 12
+      ? (item.BirthDate = item.BirthDate.slice(0, 10))
+      : item.BirthDate
+  );
 
   const dispatch = useDispatch();
   const columns = [
@@ -35,6 +41,20 @@ const List = () => {
     },
     {
       name: "LastName",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "Address",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "Phone",
       options: {
         filter: true,
         sort: false,
@@ -83,9 +103,18 @@ const List = () => {
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
             <button
-              onClick={() =>
-                window.alert(`Clicked "Edit" for row ${tableMeta.rowIndex}`)
-              }
+              onClick={() => {
+                const data = {
+                  _id: tableMeta.rowData[0],
+                  FirstName: tableMeta.rowData[1],
+                  LastName: tableMeta.rowData[2],
+                  Group: tableMeta.rowData[3],
+                  BirthDate: new Date(tableMeta.rowData[4]),
+                };
+                console.log("data in list file : ", data);
+                navigate("/players/new", { state: { data } });
+                dispatch(setCurrent(data));
+              }}
             >
               Edit
             </button>

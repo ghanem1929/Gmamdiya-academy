@@ -17,17 +17,10 @@ const Home = () => {
         <Navbar />
         <div className="widgets">
           <Widget type="players" playersNumber={players.length} />
-          <Widget type="order" />
-          <Widget type="earning" />
-          <Widget type="balance" />
-          {/* 
-          <Widget type="player" />
-          <Widget type="schedule" />
-          <Widget type="gallery" /> */}
         </div>
         <div className="charts">
           <Featured />
-          <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} />
+          <Chart title="Last 3 Months (players number)" aspect={2 / 1} />
         </div>
         <div className="listContainer">
           <div className="listTitle">Latest Transactions</div>
